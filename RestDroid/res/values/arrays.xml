@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="requestMethodTitle">
+        <item>HEAD</item>
+        <item>GET</item>
+        <item>POST</item>
+        <item>PUT</item>
+        <item>DELETE</item>
+        <item>TRACE</item>
+        <item>OPTIONS</item>
+        <item>CONNECT</item>
+        <item>PATCH</item>
+        <item>LINK</item>
+        <item>UNLINK</item>
+        <item>PURGE</item>
+    </string-array>
+    <string-array name="requestMethodValues">
+        <item>HEAD</item>
+        <item>GET</item>
+        <item>POST</item>
+        <item>PUT</item>
+        <item>DELETE</item>
+        <item>TRACE</item>
+        <item>OPTIONS</item>
+        <item>CONNECT</item>
+        <item>PATCH</item>
+        <item>LINK</item>
+        <item>UNLINK</item>
+        <item>PURGE</item>
+    </string-array>
+
+    <string-array name="protocolArray">
+        <item>HTTP</item>
+        <item>HTTPS</item>
+    </string-array>
+    
+</resources>

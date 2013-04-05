@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_save_server"
+        android:icon="@android:drawable/ic_menu_save"
+        android:showAsAction="ifRoom"
+        android:title="Guardar">
+    </item>
+    <item
+        android:id="@+id/menu_clear_server"
+        android:icon="@android:drawable/ic_notification_clear_all"
+        android:showAsAction="ifRoom"
+        android:title="Limpiar">
+    </item>
+    <item
+        android:id="@+id/menu_new_server"
+        android:icon="@android:drawable/ic_input_get"
+        android:showAsAction="ifRoom"
+        android:title="Nuevo">
+    </item>
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_settings">
+    </item>
+
+</menu>
