@@ -1,4 +1,4 @@
-package es.edu.android.restdroid;
+package es.edu.android.restdroid.helpers;
 
 import java.util.HashMap;
 import java.util.SortedMap;

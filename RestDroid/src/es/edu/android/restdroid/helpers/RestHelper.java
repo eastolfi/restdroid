@@ -1,4 +1,4 @@
-package es.edu.android.restdroid;
+package es.edu.android.restdroid.helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +10,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import es.edu.android.restdroid.R;
+import es.edu.android.restdroid.R.id;
+import es.edu.android.restdroid.activities.RestDroidActivity;
+import es.edu.android.restdroid.adpters.MyAdapter;
+import es.edu.android.restdroid.handlers.RestHandler;
+import es.edu.android.restdroid.interfaces.UriConstants;
+
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
@@ -17,11 +24,11 @@ import android.widget.ListView;
 
 public class RestHelper {
 	RestHandler restHandler;
-	MainScreen parent;
+	RestDroidActivity parent;
 	
 //	public RestHelper() {}
 	
-	public RestHelper(MainScreen parent) {
+	public RestHelper(RestDroidActivity parent) {
 		this.restHandler = new RestHandler(parent);
 		this.parent = parent;
 	}

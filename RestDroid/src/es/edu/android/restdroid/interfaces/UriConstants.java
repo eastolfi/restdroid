@@ -1,4 +1,4 @@
-package es.edu.android.restdroid;
+package es.edu.android.restdroid.interfaces;
 
 public interface UriConstants {
 	public final String SOCIAL_MUSIC_HOST = "http://socialmusic.eastolfi.c9.io";
