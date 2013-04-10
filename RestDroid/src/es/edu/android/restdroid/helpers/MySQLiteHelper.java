@@ -11,9 +11,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
-
+	private static final int DDBB_VERSION = 3;
+	
 	public MySQLiteHelper(Context context) {
-		super(context, "servidores", null, 1);
+		super(context, "servidores", null, DDBB_VERSION);
 	}
 
 	@Override
@@ -32,7 +33,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO Auto-generated method stub
+		String sql = "" +
+				" ALTER TABLE servidores ADD COLUMN orden INTEGER ";
+				
+		db.execSQL(sql);
 	}
 	
 	public ArrayList<String> obtenerServidores() {
@@ -63,7 +67,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		String sql = "" +
 				" SELECT nombre, host, campo, valor " +
 				" FROM servidores " +
-				" WHERE nombre like '" + nombre + "' ";
+				" WHERE nombre like '" + nombre + "' " +
+				" ORDER BY orden DESC ";
 		
 		Cursor c = db.rawQuery(sql, null);
 		while (c.moveToNext()) {
@@ -88,6 +93,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		
 		String sql = "";
 		if (campos != null && campos.size() > 0) {
+			int i = 1;
 			for (String campo : campos.keySet()) {
 				String valor = campos.get(campo);
 				sql = "" +
@@ -97,8 +103,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 						nombre + "', '" +
 						host + "', '" +
 						campo + "', '" +
-						valor +	"' ) ";
+						valor +	"', " +
+						i + " ) ";
 				db.execSQL(sql);
+				i++;
 			}
 		}
 		else {
