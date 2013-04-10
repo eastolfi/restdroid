@@ -15,7 +15,7 @@ import es.edu.android.restdroid.R.id;
 import es.edu.android.restdroid.activities.RestDroidActivity;
 import es.edu.android.restdroid.adpters.MyAdapter;
 import es.edu.android.restdroid.handlers.RestHandler;
-import es.edu.android.restdroid.interfaces.UriConstants;
+import es.edu.android.restdroid.interfaces.Constants;
 
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -34,7 +34,7 @@ public class RestHelper {
 	}
 	
 	public void cargarNoticias(String usuario) {
-		HttpUriRequest get = new HttpGet(UriConstants.SOCIAL_MUSIC_NOTICIAS + "/" + usuario);
+		HttpUriRequest get = new HttpGet(Constants.SOCIAL_MUSIC_NOTICIAS + "/" + usuario);
 		get.setHeader("Accept", "application/json");
 		get.setHeader("Content-Type", "application/json");
 		

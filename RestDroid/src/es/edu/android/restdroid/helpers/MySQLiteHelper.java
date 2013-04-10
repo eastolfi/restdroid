@@ -1,6 +1,8 @@
 package es.edu.android.restdroid.helpers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.SortedMap;
 
 import android.content.Context;
@@ -33,8 +35,25 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		// TODO Auto-generated method stub
 	}
 	
-	public void obtenerServidores() {
+	public ArrayList<String> obtenerServidores() {
+		SQLiteDatabase db = getReadableDatabase();
+		ArrayList<String> result = new ArrayList<String>();
 		
+		String sql = "" +
+				" SELECT nombre " +
+				" FROM servidores ";
+		
+		Cursor c = db.rawQuery(sql, null);
+		while (c.moveToNext()) {
+			try {
+				result.add(c.getString(0));
+			}
+			catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
 	}
 	
 	public HashMap<String,Object> obtenerServidorPorNombre(String nombre) {

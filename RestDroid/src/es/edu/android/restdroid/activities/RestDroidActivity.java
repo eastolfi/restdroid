@@ -1,16 +1,10 @@
 package es.edu.android.restdroid.activities;
 
-import java.util.HashMap;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.commons.lang3.StringUtils;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,26 +19,25 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.Toast;
 import es.edu.android.restdroid.R;
-import es.edu.android.restdroid.handlers.myOnClickHandler;
-import es.edu.android.restdroid.helpers.MySQLiteHelper;
-import es.edu.android.restdroid.helpers.RestHelper;
-import es.edu.android.restdroid.utils.Utils;
+import es.edu.android.restdroid.handlers.MyOnClickHandler;
+import es.edu.android.restdroid.helpers.MyDialogHelper;
+import es.edu.android.restdroid.interfaces.Constants;
 
-public class RestDroidActivity extends Activity implements OnItemSelectedListener, OnClickListener {
+public class RestDroidActivity extends FragmentActivity implements OnItemSelectedListener, OnClickListener {
 	private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
-	private int ADD_FIELD_ID, REMOVE_FIELD_ID;
+	public int ADD_FIELD_ID;
+	public int REMOVE_FIELD_ID;
 	public String PROTOCOL = "HTTP";
 //	private AdView adView;
 	final String[] HOSTS = {"project-livec948f4df9f63.rhcloud.com/noticias", "eu.battle.net/api/wow/character/colinas-pardas/riverwindd"};
 	Button btnEnviar;
 	public EditText txtHost;
 	ListView list;
-	ImageButton imgAddCampos;
+	public ImageButton imgAddCampos;
 	Spinner spnHTTP;
 	public TableLayout tableCampos;
+	MyOnClickHandler myClickHandler;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +45,7 @@ public class RestDroidActivity extends Activity implements OnItemSelectedListene
 		
 		setContentView(R.layout.activity_main_screen);
 		
+		myClickHandler = new MyOnClickHandler(this);
 		
 		/*********ADMOB***********/
 //		adView = (AdView) findViewById(R.id.adMob);		
@@ -73,12 +67,15 @@ public class RestDroidActivity extends Activity implements OnItemSelectedListene
 		spnHTTP.setOnItemSelectedListener(this);
 		
 		imgAddCampos = (ImageButton) findViewById(R.id.imgAddCampos);
-		imgAddCampos.setOnClickListener(this);
+//		imgAddCampos.setOnClickListener(this);
+//		imgAddCampos.setOnClickListener(new MyOnClickHandler(this));
+		imgAddCampos.setOnClickListener(myClickHandler);
 		
 		list = (ListView) findViewById(R.id.lstNoticias);
 		
 		btnEnviar = (Button) findViewById(R.id.btnSend);
-		btnEnviar.setOnClickListener(new myOnClickHandler(this));
+//		btnEnviar.setOnClickListener(new MyOnClickHandler(this));
+		btnEnviar.setOnClickListener(myClickHandler);
 //		btnEnviar.setOnClickListener(new OnClickListener() {
 //			@Override
 //			public void onClick(View v) {
@@ -132,56 +129,56 @@ public class RestDroidActivity extends Activity implements OnItemSelectedListene
 
 	@Override
 	public void onClick(View v) {
-		Log.d("onClick", Integer.toString(v.getId()));
-		
-		if (v.getId() == R.id.imgAddCampos) {
-			TableLayout table = (TableLayout) findViewById(R.id.tableCampos);
-//			if (table.getChildCount() > 0) {
-//				if (table.getVisibility() == View.GONE) {
-//					table.setVisibility(View.VISIBLE);
-//					imgAddCampos.setImageResource(android.R.drawable.arrow_up_float);
-//				}
-//				else {
-//					table.setVisibility(View.GONE);
-//					imgAddCampos.setImageResource(android.R.drawable.arrow_down_float);
-//				}
-//			}
-//			else {
+//		Log.d("onClick", Integer.toString(v.getId()));
+//		
+//		if (v.getId() == R.id.imgAddCampos) {
+//			TableLayout table = (TableLayout) findViewById(R.id.tableCampos);
+////			if (table.getChildCount() > 0) {
+////				if (table.getVisibility() == View.GONE) {
+////					table.setVisibility(View.VISIBLE);
+////					imgAddCampos.setImageResource(android.R.drawable.arrow_up_float);
+////				}
+////				else {
+////					table.setVisibility(View.GONE);
+////					imgAddCampos.setImageResource(android.R.drawable.arrow_down_float);
+////				}
+////			}
+////			else {
+////				addPostFields(table);
+////				imgAddCampos.setImageResource(android.R.drawable.arrow_up_float);
+////			}
+//			if (table.getChildCount() == 0) {
 //				addPostFields(table);
-//				imgAddCampos.setImageResource(android.R.drawable.arrow_up_float);
+//				table.setVisibility(View.GONE);
 //			}
-			if (table.getChildCount() == 0) {
-				addPostFields(table);
-				table.setVisibility(View.GONE);
-			}
-			swichTableFieldsState(null);
-		}
-		else if (v.getId() == ADD_FIELD_ID) {
-			ImageButton addFieldsImg = (ImageButton) findViewById(ADD_FIELD_ID);
-			TableRow row = (TableRow) addFieldsImg.getParent();
-			row.removeView(addFieldsImg);
-			
-			addPostFields((TableLayout) row.getParent());
-		}
-		else {//if (v.getId() == REMOVE_FIELD_ID) {
-			ImageButton removeFieldsImg = (ImageButton) findViewById(v.getId());
-			TableRow row = (TableRow) removeFieldsImg.getParent();
-			TableLayout t = (TableLayout) row.getParent();
-			if (row.getChildCount() == 4 && t.getChildCount() > 1) {
-				int pos = t.getChildCount() - 2; //de N elementos, el ultimo sera N-1, y el penultimo N-2
-				TableRow prevRow = (TableRow) t.getChildAt(pos);
-				ImageButton addFieldsImg = (ImageButton) findViewById(ADD_FIELD_ID);
-				ImageButton prevRemoveFields = (ImageButton) prevRow.getChildAt(2);
-				prevRow.removeViewAt(2);
-				row.removeView(addFieldsImg);
-				prevRow.addView(addFieldsImg);
-				prevRow.addView(prevRemoveFields);
-			}
-			t.removeView(row);
-			if (t.getChildCount() == 0) {
-				imgAddCampos.setImageResource(android.R.drawable.arrow_down_float);
-			}
-		}
+//			swichTableFieldsState(null);
+//		}
+//		else if (v.getId() == ADD_FIELD_ID) {
+//			ImageButton addFieldsImg = (ImageButton) findViewById(ADD_FIELD_ID);
+//			TableRow row = (TableRow) addFieldsImg.getParent();
+//			row.removeView(addFieldsImg);
+//			
+//			addPostFields((TableLayout) row.getParent());
+//		}
+//		else {//if (v.getId() == REMOVE_FIELD_ID) {
+//			ImageButton removeFieldsImg = (ImageButton) findViewById(v.getId());
+//			TableRow row = (TableRow) removeFieldsImg.getParent();
+//			TableLayout t = (TableLayout) row.getParent();
+//			if (row.getChildCount() == 4 && t.getChildCount() > 1) {
+//				int pos = t.getChildCount() - 2; //de N elementos, el ultimo sera N-1, y el penultimo N-2
+//				TableRow prevRow = (TableRow) t.getChildAt(pos);
+//				ImageButton addFieldsImg = (ImageButton) findViewById(ADD_FIELD_ID);
+//				ImageButton prevRemoveFields = (ImageButton) prevRow.getChildAt(2);
+//				prevRow.removeViewAt(2);
+//				row.removeView(addFieldsImg);
+//				prevRow.addView(addFieldsImg);
+//				prevRow.addView(prevRemoveFields);
+//			}
+//			t.removeView(row);
+//			if (t.getChildCount() == 0) {
+//				imgAddCampos.setImageResource(android.R.drawable.arrow_down_float);
+//			}
+//		}
 	}
 	
 	@Override
@@ -191,72 +188,72 @@ public class RestDroidActivity extends Activity implements OnItemSelectedListene
 		return true;
 	}
 	
-	private void addPostFields(TableLayout tableParent) {
-		addPostFields(tableParent, null, false);
-	}
+//	private void addPostFields(TableLayout tableParent) {
+//		addPostFields(tableParent, null, false);
+//	}
 
-	private void addPostFields(TableLayout tableParent, HashMap<String, String> campos, boolean cleanFirst) {
-		int nCampos = 1;
-		if (campos != null) {
-			nCampos = campos.size();
-		}
-		
-		if (cleanFirst) cleanFields(tableParent);
-		
-		for (int n=0; n<nCampos; n++) {
-			TableRow row = new TableRow(RestDroidActivity.this);
-			
-			String textField = "";
-			String textVal = "";
-			if (campos != null) {
-				String key = campos.keySet().toArray()[n].toString();
-				textField = key;
-				if (campos.get(key) != null) textVal = campos.get(key);
-			}
-			
-			TableRow.LayoutParams textParams = new TableRow.LayoutParams();
-			textParams.width = 150;
-			textParams.height = TableRow.LayoutParams.WRAP_CONTENT;
-			textParams.weight = 2.5f;
-			
-			EditText txtField = new EditText(RestDroidActivity.this);
-			txtField.setText(textField);
-			txtField.setLayoutParams(textParams);
-			row.addView(txtField);
-			
-			EditText txtVal = new EditText(RestDroidActivity.this);
-			txtVal.setText(textVal.equals("null")?"":textVal);
-			txtVal.setLayoutParams(textParams);
-			row.addView(txtVal);
-			
-			TableRow.LayoutParams imageParams = new TableRow.LayoutParams();
-			imageParams.width = TableRow.LayoutParams.WRAP_CONTENT;
-			imageParams.height = TableRow.LayoutParams.WRAP_CONTENT;
-			imageParams.weight = 1f;
-			
-			if (n == nCampos-1) {
-				ImageButton addFieldsImg = new ImageButton(RestDroidActivity.this);
-				ADD_FIELD_ID = Utils.generateViewId();
-				addFieldsImg.setId(ADD_FIELD_ID);
-				addFieldsImg.setOnClickListener(this);
-				addFieldsImg.setImageResource(android.R.drawable.ic_menu_add);
-				addFieldsImg.setLayoutParams(imageParams);
-				
-				row.addView(addFieldsImg);
-			}
-			
-			ImageButton removeFieldsImg = new ImageButton(RestDroidActivity.this);
-			REMOVE_FIELD_ID = Utils.generateViewId();
-			removeFieldsImg.setId(REMOVE_FIELD_ID);
-			removeFieldsImg.setOnClickListener(this);
-			removeFieldsImg.setImageResource(android.R.drawable.ic_menu_delete);
-			removeFieldsImg.setLayoutParams(imageParams);
-			
-			row.addView(removeFieldsImg);
-			
-			tableParent.addView(row);
-		}
-	}
+//	private void addPostFields(TableLayout tableParent, HashMap<String, String> campos, boolean cleanFirst) {
+//		int nCampos = 1;
+//		if (campos != null) {
+//			nCampos = campos.size();
+//		}
+//		
+//		if (cleanFirst) cleanFields(tableParent);
+//		
+//		for (int n=0; n<nCampos; n++) {
+//			TableRow row = new TableRow(RestDroidActivity.this);
+//			
+//			String textField = "";
+//			String textVal = "";
+//			if (campos != null) {
+//				String key = campos.keySet().toArray()[n].toString();
+//				textField = key;
+//				if (campos.get(key) != null) textVal = campos.get(key);
+//			}
+//			
+//			TableRow.LayoutParams textParams = new TableRow.LayoutParams();
+//			textParams.width = 150;
+//			textParams.height = TableRow.LayoutParams.WRAP_CONTENT;
+//			textParams.weight = 2.5f;
+//			
+//			EditText txtField = new EditText(RestDroidActivity.this);
+//			txtField.setText(textField);
+//			txtField.setLayoutParams(textParams);
+//			row.addView(txtField);
+//			
+//			EditText txtVal = new EditText(RestDroidActivity.this);
+//			txtVal.setText(textVal.equals("null")?"":textVal);
+//			txtVal.setLayoutParams(textParams);
+//			row.addView(txtVal);
+//			
+//			TableRow.LayoutParams imageParams = new TableRow.LayoutParams();
+//			imageParams.width = TableRow.LayoutParams.WRAP_CONTENT;
+//			imageParams.height = TableRow.LayoutParams.WRAP_CONTENT;
+//			imageParams.weight = 1f;
+//			
+//			if (n == nCampos-1) {
+//				ImageButton addFieldsImg = new ImageButton(RestDroidActivity.this);
+//				ADD_FIELD_ID = Utils.generateViewId();
+//				addFieldsImg.setId(ADD_FIELD_ID);
+//				addFieldsImg.setOnClickListener(this);
+//				addFieldsImg.setImageResource(android.R.drawable.ic_menu_add);
+//				addFieldsImg.setLayoutParams(imageParams);
+//				
+//				row.addView(addFieldsImg);
+//			}
+//			
+//			ImageButton removeFieldsImg = new ImageButton(RestDroidActivity.this);
+//			REMOVE_FIELD_ID = Utils.generateViewId();
+//			removeFieldsImg.setId(REMOVE_FIELD_ID);
+//			removeFieldsImg.setOnClickListener(this);
+//			removeFieldsImg.setImageResource(android.R.drawable.ic_menu_delete);
+//			removeFieldsImg.setLayoutParams(imageParams);
+//			
+//			row.addView(removeFieldsImg);
+//			
+//			tableParent.addView(row);
+//		}
+//	}
 	
 //	public static int generateViewId() {
 //	    for (;;) {
@@ -289,15 +286,25 @@ public class RestDroidActivity extends Activity implements OnItemSelectedListene
 
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		MyDialogHelper dialog;
 		switch (item.getItemId()) {
-		case R.id.menu_new_server:
-			cargarServidor();
-			break;
 		case R.id.menu_save_server:
-			guardarServidor();
+//			MyOnClickHandler onclick2 = new MyOnClickHandler(this);
+			dialog = new MyDialogHelper(this, Constants.DIALOG_GUARDAR_SERVIDOR);
+			dialog.show(this.getSupportFragmentManager(), "");
+//			myClickHandler.guardarServidor();
+			break;
+		case R.id.menu_new_server:
+//			MyOnClickHandler onclick = new MyOnClickHandler(this);
+//			myClickHandler.cargarServidor();
+			dialog = new MyDialogHelper(this, Constants.DIALOG_CARGAR_SERVIDOR);
+			dialog.show(this.getSupportFragmentManager(), "");
 			break;
 		case R.id.menu_clear_server:
-			cleanFields((TableLayout) findViewById(R.id.tableCampos));
+//			MyOnClickHandler onclick3 = new MyOnClickHandler(this);
+//			myClickHandler.cleanFields((TableLayout) findViewById(R.id.tableCampos));
+			dialog = new MyDialogHelper(this, Constants.DIALOG_LIMPIAR_CAMPOS);
+			dialog.show(this.getSupportFragmentManager(), "");
 			break;
 		case R.id.menu_settings:
 			
@@ -306,68 +313,68 @@ public class RestDroidActivity extends Activity implements OnItemSelectedListene
 		return super.onMenuItemSelected(featureId, item);
 	}
 	
-	private void cleanFields(TableLayout tableParent) {
-		swichTableFieldsState(false);
-		tableParent.removeAllViews();
-	}
+//	private void cleanFields(TableLayout tableParent) {
+//		swichTableFieldsState(false);
+//		tableParent.removeAllViews();
+//	}
 	
-	private void swichTableFieldsState(Boolean stateVisible) {
-		TableLayout table = (TableLayout) findViewById(R.id.tableCampos);
-		if (stateVisible == null) {
-			if (table.getVisibility() == View.GONE) {
-				table.setVisibility(View.VISIBLE);
-				imgAddCampos.setImageResource(android.R.drawable.arrow_up_float);
-			}
-			else {
-				table.setVisibility(View.GONE);
-				imgAddCampos.setImageResource(android.R.drawable.arrow_down_float);
-			}
-		}
-		else {
-			if (stateVisible) {
-				table.setVisibility(View.VISIBLE);
-				imgAddCampos.setImageResource(android.R.drawable.arrow_up_float);
-			}
-			else {
-				table.setVisibility(View.GONE);
-				imgAddCampos.setImageResource(android.R.drawable.arrow_down_float);
-			}
-		}
-	}
+//	private void swichTableFieldsState(Boolean stateVisible) {
+//		TableLayout table = (TableLayout) findViewById(R.id.tableCampos);
+//		if (stateVisible == null) {
+//			if (table.getVisibility() == View.GONE) {
+//				table.setVisibility(View.VISIBLE);
+//				imgAddCampos.setImageResource(android.R.drawable.arrow_up_float);
+//			}
+//			else {
+//				table.setVisibility(View.GONE);
+//				imgAddCampos.setImageResource(android.R.drawable.arrow_down_float);
+//			}
+//		}
+//		else {
+//			if (stateVisible) {
+//				table.setVisibility(View.VISIBLE);
+//				imgAddCampos.setImageResource(android.R.drawable.arrow_up_float);
+//			}
+//			else {
+//				table.setVisibility(View.GONE);
+//				imgAddCampos.setImageResource(android.R.drawable.arrow_down_float);
+//			}
+//		}
+//	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void cargarServidor() {
-		MySQLiteHelper sqlHelper = new MySQLiteHelper(RestDroidActivity.this);
-		HashMap<String, Object> result = sqlHelper.obtenerServidorPorNombre("WOW");
-		
-		Toast.makeText(RestDroidActivity.this, result.get("nombre").toString(), Toast.LENGTH_SHORT).show();
-		
-		txtHost.setText(result.get("host").toString());
-		
-		swichTableFieldsState(true);
-	}
+//	@SuppressWarnings({ "unchecked", "rawtypes" })
+//	private void cargarServidor() {
+//		MySQLiteHelper sqlHelper = new MySQLiteHelper(RestDroidActivity.this);
+//		HashMap<String, Object> result = sqlHelper.obtenerServidorPorNombre("WOW");
+//		
+//		Toast.makeText(RestDroidActivity.this, result.get("nombre").toString(), Toast.LENGTH_SHORT).show();
+//		
+//		txtHost.setText(result.get("host").toString());
+//		
+//		swichTableFieldsState(true);
+//	}
 	
-	private void guardarServidor() {
-		MySQLiteHelper sqlHelper = new MySQLiteHelper(RestDroidActivity.this);
-		
-		String nombre = "WOW";
-		String host = txtHost.getText().toString();
-		SortedMap<String, String> campos = new TreeMap<String, String>();
-		
-		TableLayout tableCampos = (TableLayout) findViewById(R.id.tableCampos);
-		if (tableCampos.getChildCount() > 0) {
-			for (int i=0; i<tableCampos.getChildCount(); i++) {
-				TableRow row = (TableRow) tableCampos.getChildAt(i);
-				String campo = ((EditText) row.getChildAt(0)).getText().toString();
-				String valor = ((EditText) row.getChildAt(1)).getText().toString();
-				if (campo != null || !campo.isEmpty()) {
-					if (valor.isEmpty()) valor = null;
-					campos.put(campo, valor);
-				}
-			}
-		}
-		
-		sqlHelper.guardarServidor(nombre, host, campos);
-	}
+//	private void guardarServidor() {
+//		MySQLiteHelper sqlHelper = new MySQLiteHelper(RestDroidActivity.this);
+//		
+//		String nombre = "WOW";
+//		String host = txtHost.getText().toString();
+//		SortedMap<String, String> campos = new TreeMap<String, String>();
+//		
+//		TableLayout tableCampos = (TableLayout) findViewById(R.id.tableCampos);
+//		if (tableCampos.getChildCount() > 0) {
+//			for (int i=0; i<tableCampos.getChildCount(); i++) {
+//				TableRow row = (TableRow) tableCampos.getChildAt(i);
+//				String campo = ((EditText) row.getChildAt(0)).getText().toString();
+//				String valor = ((EditText) row.getChildAt(1)).getText().toString();
+//				if (campo != null || !campo.isEmpty()) {
+//					if (valor.isEmpty()) valor = null;
+//					campos.put(campo, valor);
+//				}
+//			}
+//		}
+//		
+//		sqlHelper.guardarServidor(nombre, host, campos);
+//	}
 	
 }
