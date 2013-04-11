@@ -1,4 +1,4 @@
-package es.edu.android.restdroid;
+package es.edu.android.restdroid.handlers;
 
 import java.lang.reflect.Method;
 
@@ -8,17 +8,22 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import es.edu.android.restdroid.R;
+import es.edu.android.restdroid.R.drawable;
+import es.edu.android.restdroid.activities.RestDroidActivity;
+import es.edu.android.restdroid.helpers.RestHelper;
+
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 public class RestHandler extends AsyncTask<Object, Integer, String> {	
 	HttpClient client;
-	MainScreen parent;
+	RestDroidActivity parent;
 	String callbackStr;
 	Method callbackMethod;
 	ProgressDialog dialog;
 	
-	public RestHandler(MainScreen parent) {
+	public RestHandler(RestDroidActivity parent) {
 		this.parent = parent;
 		client = new DefaultHttpClient();
 
@@ -74,7 +79,7 @@ public class RestHandler extends AsyncTask<Object, Integer, String> {
 		Object methodParams[] = {result};
 		Object classInstance;
 		try {
-			classInstance = methodClass.getConstructor(MainScreen.class).newInstance(parent);
+			classInstance = methodClass.getConstructor(RestDroidActivity.class).newInstance(parent);
 			callbackMethod = methodClass.getDeclaredMethod(callbackStr, methodParamsType);
 			callbackMethod.invoke(classInstance, methodParams);
 		} catch (Exception e) {

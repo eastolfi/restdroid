@@ -1,4 +1,4 @@
-package es.edu.android.restdroid;
+package es.edu.android.restdroid.adpters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import es.edu.android.restdroid.R;
+import es.edu.android.restdroid.R.layout;
 
 import android.app.Activity;
 import android.util.Log;

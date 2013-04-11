@@ -1,5 +1,9 @@
-package es.edu.android.restdroid;
+package es.edu.android.restdroid.activities;
 
+import es.edu.android.restdroid.R;
+import es.edu.android.restdroid.R.id;
+import es.edu.android.restdroid.R.layout;
+import es.edu.android.restdroid.R.menu;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
