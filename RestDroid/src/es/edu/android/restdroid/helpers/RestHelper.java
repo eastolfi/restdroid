@@ -10,17 +10,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import es.edu.android.restdroid.R;
-import es.edu.android.restdroid.R.id;
-import es.edu.android.restdroid.activities.RestDroidActivity;
-import es.edu.android.restdroid.adpters.MyAdapter;
-import es.edu.android.restdroid.handlers.RestHandler;
-import es.edu.android.restdroid.interfaces.Constants;
-
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import es.edu.android.restdroid.R;
+import es.edu.android.restdroid.activities.RestDroidActivity;
+import es.edu.android.restdroid.adpters.MyAdapter;
+import es.edu.android.restdroid.handlers.RestHandler;
+import es.edu.android.restdroid.interfaces.Constants;
 
 public class RestHelper {
 	RestHandler restHandler;

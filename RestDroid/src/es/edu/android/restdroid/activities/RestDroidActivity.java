@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -38,6 +39,8 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 	Spinner spnHTTP;
 	public TableLayout tableCampos;
 	MyOnClickHandler myClickHandler;
+	public LinearLayout mainLayout;
+	public Menu menu; 
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,8 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 //		adView = (AdView) findViewById(R.id.adMob);		
 //		adView.loadAd(new AdRequest());
 		/*************************/
+		
+		mainLayout = (LinearLayout) findViewById(R.id.mainLinearLayout);
 		
 		tableCampos = (TableLayout) findViewById(R.id.tableCampos);
 		
@@ -101,7 +106,9 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 		btnEnviar.setOnLongClickListener(new OnLongClickListener() {
 			@Override
 			public boolean onLongClick(View v) {
-				startActivity(new Intent(RestDroidActivity.this, FieldActivity.class));
+				menu.getItem(0).setVisible(false);
+				menu.getItem(1).setVisible(true);
+//				startActivity(new Intent(RestDroidActivity.this, FieldActivity.class));
 //				setContentView(R.layout.boceto);
 				return true;
 			}
@@ -185,6 +192,9 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main_screen, menu);
+		
+		this.menu = menu;
+		
 		return true;
 	}
 	
@@ -294,7 +304,9 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 			dialog.show(this.getSupportFragmentManager(), "");
 //			myClickHandler.guardarServidor();
 			break;
-		case R.id.menu_new_server:
+		case R.id.menu_modif_server:
+			break;
+		case R.id.menu_load_server:
 //			MyOnClickHandler onclick = new MyOnClickHandler(this);
 //			myClickHandler.cargarServidor();
 			dialog = new MyDialogHelper(this, Constants.DIALOG_CARGAR_SERVIDOR);
@@ -305,6 +317,7 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 //			myClickHandler.cleanFields((TableLayout) findViewById(R.id.tableCampos));
 			dialog = new MyDialogHelper(this, Constants.DIALOG_LIMPIAR_CAMPOS);
 			dialog.show(this.getSupportFragmentManager(), "");
+			mainLayout.setTag("NEW");
 			break;
 		case R.id.menu_settings:
 			

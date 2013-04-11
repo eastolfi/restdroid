@@ -8,13 +8,11 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
-import es.edu.android.restdroid.R;
-import es.edu.android.restdroid.R.drawable;
-import es.edu.android.restdroid.activities.RestDroidActivity;
-import es.edu.android.restdroid.helpers.RestHelper;
-
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import es.edu.android.restdroid.R;
+import es.edu.android.restdroid.activities.RestDroidActivity;
+import es.edu.android.restdroid.helpers.RestHelper;
 
 public class RestHandler extends AsyncTask<Object, Integer, String> {	
 	HttpClient client;

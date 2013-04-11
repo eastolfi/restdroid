@@ -1,9 +1,5 @@
 package es.edu.android.restdroid.activities;
 
-import es.edu.android.restdroid.R;
-import es.edu.android.restdroid.R.id;
-import es.edu.android.restdroid.R.layout;
-import es.edu.android.restdroid.R.menu;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,10 +9,9 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.TextView;
+import es.edu.android.restdroid.R;
 
 public class FieldActivity extends Activity {
 	Context ctx;

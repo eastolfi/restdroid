@@ -2,8 +2,9 @@ package es.edu.android.restdroid.helpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.SortedMap;
+import java.util.TreeMap;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -11,7 +12,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
-	private static final int DDBB_VERSION = 3;
+	private static final int DDBB_VERSION = 4;
 	
 	public MySQLiteHelper(Context context) {
 		super(context, "servidores", null, DDBB_VERSION);
@@ -33,8 +34,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		String sql = "" +
-				" ALTER TABLE servidores ADD COLUMN orden INTEGER ";
+		String sql = " ALTER TABLE servidores ADD COLUMN orden INTEGER ";
 				
 		db.execSQL(sql);
 	}
@@ -44,7 +44,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		ArrayList<String> result = new ArrayList<String>();
 		
 		String sql = "" +
-				" SELECT nombre " +
+				" SELECT DISTINCT nombre " +
 				" FROM servidores ";
 		
 		Cursor c = db.rawQuery(sql, null);
@@ -63,17 +63,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 	public HashMap<String,Object> obtenerServidorPorNombre(String nombre) {
 		SQLiteDatabase db = getReadableDatabase();
 		HashMap<String, Object> queryResult = new HashMap<String, Object>();
-		HashMap<String, String> campos = new HashMap<String, String>();
+		LinkedHashMap<String, String> campos = new LinkedHashMap<String, String>();
 		String sql = "" +
 				" SELECT nombre, host, campo, valor " +
 				" FROM servidores " +
 				" WHERE nombre like '" + nombre + "' " +
-				" ORDER BY orden DESC ";
+				" ORDER BY orden ";
 		
 		Cursor c = db.rawQuery(sql, null);
 		while (c.moveToNext()) {
 			try {
-				if (!campos.containsKey("nombre") && !campos.containsKey("host")) {
+				if (!queryResult.containsKey("nombre") && !queryResult.containsKey("host")) {
 					queryResult.put("nombre", c.getString(c.getColumnIndexOrThrow("nombre")));
 					queryResult.put("host", c.getString(c.getColumnIndexOrThrow("host")));
 				}
@@ -88,7 +88,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 		return queryResult;
 	}
 	
-	public void guardarServidor(String nombre, String host, SortedMap<String, String> campos) {
+	public void guardarServidor(String nombre, String host, LinkedHashMap<String, String> campos) {
 		SQLiteDatabase db = getWritableDatabase();
 		
 		String sql = "";

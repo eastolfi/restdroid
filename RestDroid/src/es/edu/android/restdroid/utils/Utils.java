@@ -48,7 +48,7 @@ public class Utils {
 		for (int i = 0; i < tableCampos.getChildCount(); i++) {
 			TableRow row = (TableRow) tableCampos.getChildAt(i);
 			EditText campo = (EditText) row.getChildAt(0);
-			EditText valor = (EditText) row.getChildAt(1);
+//			EditText valor = (EditText) row.getChildAt(1);
 			
 			uri += "/" + StringUtils.uncapitalize(campo.getText().toString());
 		}

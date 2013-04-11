@@ -3,15 +3,10 @@ package es.edu.android.restdroid.adpters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import es.edu.android.restdroid.R;
-import es.edu.android.restdroid.R.layout;
-
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +14,7 @@ import android.widget.BaseAdapter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import es.edu.android.restdroid.R;
 
 /**
  * Adaptador para mostrar las puntuaciones mediante vistas

@@ -1,21 +1,18 @@
 package es.edu.android.restdroid.handlers;
 
 import java.util.HashMap;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
 
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Adapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
-import android.widget.Toast;
 import es.edu.android.restdroid.R;
 import es.edu.android.restdroid.activities.RestDroidActivity;
 import es.edu.android.restdroid.helpers.MySQLiteHelper;
@@ -268,6 +265,8 @@ public class MyOnClickHandler implements OnClickListener {
 //		result.get("campos");
 		addCampos(parent.tableCampos, campos, true);
 		
+		parent.mainLayout.setTag("LOADED");
+		
 		swichTableFieldsState(true);
 	}
 	
@@ -276,7 +275,7 @@ public class MyOnClickHandler implements OnClickListener {
 		
 //		String nombre = "WOW";
 		String host = parent.txtHost.getText().toString();
-		SortedMap<String, String> campos = new TreeMap<String, String>();
+		LinkedHashMap<String, String> campos = new LinkedHashMap<String, String>();
 		
 		TableLayout tableCampos = (TableLayout) parent.findViewById(R.id.tableCampos);
 		if (tableCampos.getChildCount() > 0) {

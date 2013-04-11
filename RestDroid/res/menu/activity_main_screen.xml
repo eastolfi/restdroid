@@ -7,22 +7,43 @@
         android:title="Guardar">
     </item>
     <item
+        android:id="@+id/menu_modif_server"
+        android:icon="@drawable/ic_menu_overflow"
+        android:showAsAction="ifRoom"
+        android:title="Modificar"
+        android:visible="false">
+        <menu>
+            <item
+                android:id="@+id/menu_modif_server_save"
+                android:icon="@drawable/ic_menu_save"
+                android:title="Guardar"/>
+            <item
+                android:id="@+id/menu_modif_server_edit"
+                android:icon="@android:drawable/ic_menu_edit"
+                android:title="Editar"/>
+            <item
+                android:id="@+id/menu_modif_server_delete"
+                android:icon="@android:drawable/ic_delete"
+                android:title="Borrar"/>
+        </menu>
+    </item>
+    <item
         android:id="@+id/menu_clear_server"
         android:icon="@android:drawable/ic_notification_clear_all"
         android:showAsAction="ifRoom"
         android:title="Limpiar">
     </item>
     <item
-        android:id="@+id/menu_new_server"
+        android:id="@+id/menu_load_server"
         android:icon="@android:drawable/ic_input_get"
         android:showAsAction="ifRoom"
-        android:title="Nuevo">
+        android:title="Cargar">
     </item>
     <item
         android:id="@+id/menu_settings"
         android:icon="@android:drawable/ic_menu_manage"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom"
+        android:showAsAction="never"
         android:title="@string/menu_settings">
     </item>
 
