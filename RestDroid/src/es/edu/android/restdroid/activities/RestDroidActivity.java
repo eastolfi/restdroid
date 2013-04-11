@@ -1,8 +1,5 @@
 package es.edu.android.restdroid.activities;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -20,17 +17,21 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
+
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
+
 import es.edu.android.restdroid.R;
 import es.edu.android.restdroid.handlers.MyOnClickHandler;
 import es.edu.android.restdroid.helpers.MyDialogHelper;
 import es.edu.android.restdroid.interfaces.Constants;
 
 public class RestDroidActivity extends FragmentActivity implements OnItemSelectedListener, OnClickListener {
-	private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+//	private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
 	public int ADD_FIELD_ID;
 	public int REMOVE_FIELD_ID;
 	public String PROTOCOL = "HTTP";
-//	private AdView adView;
+	private AdView adView;
 	final String[] HOSTS = {"project-livec948f4df9f63.rhcloud.com/noticias", "eu.battle.net/api/wow/character/colinas-pardas/riverwindd"};
 	Button btnEnviar;
 	public EditText txtHost;
@@ -51,8 +52,12 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 		myClickHandler = new MyOnClickHandler(this);
 		
 		/*********ADMOB***********/
-//		adView = (AdView) findViewById(R.id.adMob);		
-//		adView.loadAd(new AdRequest());
+		adView = (AdView) findViewById(R.id.adMob);		
+		AdRequest req = new AdRequest();
+		req.addTestDevice(AdRequest.TEST_EMULATOR);
+		req.addTestDevice("0019cf7e2a801f");
+		adView.loadAd(req);
+//		adView = new AdView(this, null);
 		/*************************/
 		
 		mainLayout = (LinearLayout) findViewById(R.id.mainLinearLayout);
@@ -290,7 +295,7 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 
 	@Override
 	public void onDestroy() {
-//		adView.destroy();
+		adView.destroy();
 		super.onDestroy();
 	}
 

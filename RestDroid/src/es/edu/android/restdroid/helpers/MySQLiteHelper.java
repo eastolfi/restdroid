@@ -3,8 +3,6 @@ package es.edu.android.restdroid.helpers;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -27,6 +25,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 					" host TEXT NOT NULL, " +
 					" campo TEXT, " +
 					" valor TEXT " +
+					" orden INTEGER " +
 				" ) ";
 				
 		db.execSQL(sql);
