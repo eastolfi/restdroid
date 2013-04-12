@@ -17,6 +17,7 @@ import es.edu.android.restdroid.R;
 import es.edu.android.restdroid.activities.RestDroidActivity;
 import es.edu.android.restdroid.helpers.MySQLiteHelper;
 import es.edu.android.restdroid.helpers.RestHelper;
+import es.edu.android.restdroid.interfaces.Constants;
 import es.edu.android.restdroid.utils.Utils;
 
 /**
@@ -41,26 +42,16 @@ public class MyOnClickHandler implements OnClickListener {
 			mostrarTablaCampos();
 		else if (v.getId() == parent.ADD_FIELD_ID)
 			addCampoFromButton();
-		else
+		else if (v.getId() == R.id.menu_modif_server_save)
+			return;
+		else if (v.getId() == R.id.menu_modif_server_edit)
+			return;
+		else if (v.getId() == R.id.menu_modif_server_delete)
+			return;
+		else	//Hay que dejar el boton de borrar fila en el else, ya que no hay manera de obtener su id
 			removeCampoFromButton(v.getId());
 			
 			
-//		switch (v.getId()) {
-//			//Boton de llamada al servicio
-//			case R.id.btnSend:
-//				enviar();
-//				break;
-//			//Boton que muestra / oculta la tabla de campos
-//			case R.id.imgAddCampos:
-//				mostrarTablaCampos();
-//				break;
-//			case R.id.button1:
-//				mostrarTablaCampos();
-//				break;
-//	
-//			default:
-//				break;
-//		}
 	}
 	
 	/**
@@ -147,6 +138,7 @@ public class MyOnClickHandler implements OnClickListener {
 		tableParent.removeAllViews();
 		
 		ListAdapter adapter = ((ListView) parent.findViewById(R.id.lstNoticias)).getAdapter();
+		switchMenuItems(Constants.TAG_NUEVO);
 		//clear list view
 	}
 	
@@ -172,7 +164,10 @@ public class MyOnClickHandler implements OnClickListener {
 			String textVal = "";
 			//Si ha llegado algun campo, se recoge el contenido del campo y su valor (si tiene)
 			if (campos != null) {
-				String key = campos.keySet().toArray()[n].toString();
+				String key = "";
+				if (campos.keySet().toArray()[n] != null) {
+					key = campos.keySet().toArray()[n].toString();
+				}
 				textField = key;
 				if (campos.get(key) != null) textVal = campos.get(key);
 			}
@@ -190,6 +185,7 @@ public class MyOnClickHandler implements OnClickListener {
 			txtField.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 			txtField.requestFocus();
 			row.addView(txtField);
+				
 			
 			//Se crea el campo de valor, se le asignan las propiedades y se añade a la fila
 			EditText txtVal = new EditText(parent);
@@ -254,6 +250,20 @@ public class MyOnClickHandler implements OnClickListener {
 		}
 	}
 	
+	private void switchMenuItems(String tag) {
+		if (tag.equals(Constants.TAG_NUEVO)) {
+			parent.mainLayout.setTag(Constants.TAG_NUEVO);
+			parent.menu.getItem(0).setVisible(true);
+			parent.menu.getItem(1).setVisible(false);
+		}
+		else if (tag.equals(Constants.TAG_EDITANDO)) {
+			parent.mainLayout.setTag(Constants.TAG_EDITANDO);
+			parent.menu.getItem(0).setVisible(false);
+			parent.menu.getItem(1).setVisible(true);
+		}
+		
+	}
+	
 	public void cargarServidor(String nombre) {
 		MySQLiteHelper sqlHelper = new MySQLiteHelper(parent);
 		HashMap<String, Object> result = sqlHelper.obtenerServidorPorNombre(nombre);
@@ -263,17 +273,18 @@ public class MyOnClickHandler implements OnClickListener {
 		parent.txtHost.setText(result.get("host").toString());
 		HashMap<String, String> campos = (HashMap<String, String>) result.get("campos");
 //		result.get("campos");
-		addCampos(parent.tableCampos, campos, true);
+		if (campos != null && campos.size() > 0 && campos.get(0) != null) {
+			addCampos(parent.tableCampos, campos, true);
+			swichTableFieldsState(true);
+		}
 		
 		parent.mainLayout.setTag("LOADED");
-		
-		swichTableFieldsState(true);
+		switchMenuItems(Constants.TAG_EDITANDO);
 	}
 	
-	public void guardarServidor(String nombre) {
+	public void guardarServidor(String nombre, boolean edit) {
 		MySQLiteHelper sqlHelper = new MySQLiteHelper(parent);
 		
-//		String nombre = "WOW";
 		String host = parent.txtHost.getText().toString();
 		LinkedHashMap<String, String> campos = new LinkedHashMap<String, String>();
 		
@@ -283,14 +294,19 @@ public class MyOnClickHandler implements OnClickListener {
 				TableRow row = (TableRow) tableCampos.getChildAt(i);
 				String campo = ((EditText) row.getChildAt(0)).getText().toString();
 				String valor = ((EditText) row.getChildAt(1)).getText().toString();
-				if (campo != null || !campo.isEmpty()) {
+				if (campo != null && !campo.isEmpty()) {
 					if (valor.isEmpty()) valor = null;
 					campos.put(campo, valor);
 				}
 			}
 		}
-		//mirar porque guarda 3 veces
-		sqlHelper.guardarServidor(nombre, host, campos);
+		
+		if (edit)
+			sqlHelper.actualizarServidor(nombre, host, campos);
+		else
+			sqlHelper.guardarServidor(nombre, host, campos);
+			
+		switchMenuItems(Constants.TAG_EDITANDO);
 	}
 
 }

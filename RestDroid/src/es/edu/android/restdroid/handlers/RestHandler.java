@@ -27,30 +27,6 @@ public class RestHandler extends AsyncTask<Object, Integer, String> {
 
 	}
 	
-//	private String doPost(String host) {
-//		try {
-//			HttpClient client = new DefaultHttpClient();
-//			HttpPost post = new HttpPost(host);
-//			post.setHeader("Accept", "application/json");
-//			post.setHeader("Content-Type", "application/json");
-//			
-//			JSONObject obj = new JSONObject();
-//			obj.put("nombre", "usuClient");
-//			obj.put("apellidos", "apellidosClient");
-//			obj.put("correo", "correoClient");
-//			obj.put("pswd", "qqq");
-//			
-//			post.setEntity(new StringEntity(obj.toString()));
-//			
-//			HttpResponse response = client.execute(post);
-//			
-//			return response.toString();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-	
 	@Override
 	protected String doInBackground(Object... params) {
 		String response = "";

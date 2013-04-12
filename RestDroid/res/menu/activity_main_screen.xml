@@ -15,7 +15,7 @@
         <menu>
             <item
                 android:id="@+id/menu_modif_server_save"
-                android:icon="@drawable/ic_menu_save"
+                android:icon="@drawable/ic_menu_save2"
                 android:title="Guardar"/>
             <item
                 android:id="@+id/menu_modif_server_edit"

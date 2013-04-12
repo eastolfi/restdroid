@@ -50,7 +50,7 @@ public class MyDialogHelper extends DialogFragment {
 					@Override
 		           public void onClick(DialogInterface dialog, int id) {
 						String name = ((EditText) view.findViewById(R.id.dialog_server_name)).getText().toString();
-						clickHandler.guardarServidor(name);
+						clickHandler.guardarServidor(name, false);
 		           }
 		       });
 			}

@@ -12,4 +12,7 @@ public interface Constants {
 	public final String DIALOG_GUARDAR_SERVIDOR = "GUARDAR_SERVIDOR";
 	public final String DIALOG_LIMPIAR_CAMPOS = "LIMPIAR_CAMPOS";
 	
+	//Tag
+	public final String TAG_NUEVO = "NUEVO";
+	public final String TAG_EDITANDO = "EDITAR";
 }
