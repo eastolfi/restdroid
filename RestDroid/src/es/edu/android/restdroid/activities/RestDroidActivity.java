@@ -27,9 +27,9 @@ import android.widget.Toast;
 import com.google.ads.AdRequest;
 import com.google.ads.AdView;
 
-import es.edu.android.beans.CampoBean;
-import es.edu.android.beans.ServidorBean;
 import es.edu.android.restdroid.R;
+import es.edu.android.restdroid.beans.CampoBean;
+import es.edu.android.restdroid.beans.ServidorBean;
 import es.edu.android.restdroid.handlers.MyAdMobListener;
 import es.edu.android.restdroid.handlers.MyOnClickHandler;
 import es.edu.android.restdroid.helpers.MyDialogHelper;

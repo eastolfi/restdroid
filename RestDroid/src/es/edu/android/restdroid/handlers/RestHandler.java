@@ -36,7 +36,7 @@ public class RestHandler extends AsyncTask<Object, Integer, String> {
 			HttpResponse execute = client.execute(request);
 			response = EntityUtils.toString(execute.getEntity());
 			
-			return response;
+//			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
 			response = e.getLocalizedMessage();

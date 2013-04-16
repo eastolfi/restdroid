@@ -98,6 +98,7 @@ public class RestHelper {
 			if (jObject == null) jArray = new JSONArray(result);
 			for (int i = 0; i < jArray.length(); i++) {
 				JSONObject jObj = jArray.getJSONObject(i);
+				map = new HashMap<String, String>();
 				for (Iterator iterator = jObj.keys(); iterator.hasNext();) {
 					String string = (String) iterator.next();
 					lst.add(jObj.get(string).toString());

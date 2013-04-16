@@ -1,19 +1,15 @@
 package es.edu.android.restdroid.helpers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
-import es.edu.android.beans.CampoBean;
-import es.edu.android.beans.ServidorBean;
-import es.edu.android.builder.ServidorBuilder;
-import es.edu.android.restdroid.handlers.MyOnClickHandler;
-import es.edu.android.restdroid.interfaces.TableScripts;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import es.edu.android.restdroid.beans.CampoBean;
+import es.edu.android.restdroid.beans.ServidorBean;
+import es.edu.android.restdroid.builder.ServidorBuilder;
+import es.edu.android.restdroid.interfaces.TableScripts;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 	private static final int DDBB_VERSION = 7;
