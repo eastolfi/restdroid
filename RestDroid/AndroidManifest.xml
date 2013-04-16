@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="es.edu.android.restdroid"
     android:installLocation="preferExternal"
-    android:versionCode="4"
-    android:versionName="1.2" >
+    android:versionCode="6"
+    android:versionName="1.2.2" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -20,7 +20,6 @@
         <activity
             android:name="es.edu.android.restdroid.activities.RestDroidActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +29,7 @@
         </activity>
         <activity
             android:name="es.edu.android.restdroid.activities.SplashScreen"
-            android:theme="@android:style/Theme.Dialog" >
+            android:label="¡Bienvenid@!" >
         </activity>
         <activity
             android:name="com.google.ads.AdActivity"
