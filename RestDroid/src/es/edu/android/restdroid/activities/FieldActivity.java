@@ -34,8 +34,8 @@ public class FieldActivity extends Activity {
 				EditText t2 = new EditText(ctx);
 				ImageButton i = new ImageButton(ctx);
 				
-				final float scale = ctx.getResources().getDisplayMetrics().density;
-				int pixels = (int) (10 * scale + 0.5f);
+//				final float scale = ctx.getResources().getDisplayMetrics().density;
+//				int pixels = (int) (10 * scale + 0.5f);
 				TableRow.LayoutParams pR = new TableRow.LayoutParams();
 				TableRow.LayoutParams ipR = new TableRow.LayoutParams();
 				pR.width = 150;

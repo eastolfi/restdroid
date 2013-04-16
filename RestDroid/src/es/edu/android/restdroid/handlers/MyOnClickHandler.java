@@ -1,5 +1,6 @@
 package es.edu.android.restdroid.handlers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -13,6 +14,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import es.edu.android.beans.CampoBean;
+import es.edu.android.beans.ServidorBean;
 import es.edu.android.restdroid.R;
 import es.edu.android.restdroid.activities.RestDroidActivity;
 import es.edu.android.restdroid.helpers.MySQLiteHelper;
@@ -42,12 +45,6 @@ public class MyOnClickHandler implements OnClickListener {
 			mostrarTablaCampos();
 		else if (v.getId() == parent.ADD_FIELD_ID)
 			addCampoFromButton();
-		else if (v.getId() == R.id.menu_modif_server_save)
-			return;
-		else if (v.getId() == R.id.menu_modif_server_edit)
-			return;
-		else if (v.getId() == R.id.menu_modif_server_delete)
-			return;
 		else	//Hay que dejar el boton de borrar fila en el else, ya que no hay manera de obtener su id
 			removeCampoFromButton(v.getId());
 			
@@ -137,9 +134,9 @@ public class MyOnClickHandler implements OnClickListener {
 		swichTableFieldsState(false);
 		tableParent.removeAllViews();
 		
-		ListAdapter adapter = ((ListView) parent.findViewById(R.id.lstNoticias)).getAdapter();
+//		ListAdapter adapter = ((ListView) parent.findViewById(R.id.lstNoticias)).getAdapter();
 		switchMenuItems(Constants.TAG_NUEVO);
-		//clear list view
+		//TODO clear list view
 	}
 	
 	//Añade uno a uno => no hay map de campos ni se limpia la tabla antes
@@ -147,29 +144,28 @@ public class MyOnClickHandler implements OnClickListener {
 		addCampos(tableParent, null, false);
 	}
 	
-	private void addCampos(TableLayout tableParent, HashMap<String, String> campos, boolean cleanFirst) {
-		int nCampos = 1;
-		if (campos != null) {
-			nCampos = campos.size();
+	private void addCampos(TableLayout tableParent, ArrayList<CampoBean> campos, boolean cleanFirst) {
+		ArrayList<CampoBean> mCampos = campos;
+		if (campos == null) {
+			mCampos = new ArrayList<CampoBean>();
+			mCampos.add(new CampoBean());
 		}
 		
 		if (cleanFirst) cleanFields(tableParent);
 		
 		//Se añade los campos
-		for (int n=0; n<nCampos; n++) {
+		for (CampoBean campo : mCampos) {
 			//Se crea una fila por cada par de campos (campo/valor)
 			TableRow row = new TableRow(parent);
 			
 			String textField = "";
 			String textVal = "";
 			//Si ha llegado algun campo, se recoge el contenido del campo y su valor (si tiene)
-			if (campos != null) {
-				String key = "";
-				if (campos.keySet().toArray()[n] != null) {
-					key = campos.keySet().toArray()[n].toString();
-				}
-				textField = key;
-				if (campos.get(key) != null) textVal = campos.get(key);
+			if (campo.getCampo() != null) {
+				textField = campo.getCampo();
+			}
+			if (campo.getValor() != null) {
+				textVal = campo.getValor();
 			}
 			
 			//Se crean las propiedades de los campos
@@ -200,7 +196,8 @@ public class MyOnClickHandler implements OnClickListener {
 			imageParams.weight = 1f;
 			
 			//Si se esta añadiendo el ultimo par de campos, agregamos el boton de añadir
-			if (n == nCampos-1) {
+			if (campo.equals(mCampos.get(mCampos.size()-1))) {
+//				campos.indexOf(campo) == campos.size()-1
 				ImageButton addFieldsImg = new ImageButton(parent);
 				parent.ADD_FIELD_ID = Utils.generateViewId();
 				addFieldsImg.setId(parent.ADD_FIELD_ID);
@@ -223,6 +220,10 @@ public class MyOnClickHandler implements OnClickListener {
 			
 			//Se añade la fila a la tabla
 			tableParent.addView(row);
+			CampoBean campoBean = new CampoBean();
+			campo.setCampo(textField);
+			campo.setValor(textVal);
+			parent.activeServer.getCampos().add(campoBean);
 		}
 	}
 	
@@ -266,15 +267,15 @@ public class MyOnClickHandler implements OnClickListener {
 	
 	public void cargarServidor(String nombre) {
 		MySQLiteHelper sqlHelper = new MySQLiteHelper(parent);
-		HashMap<String, Object> result = sqlHelper.obtenerServidorPorNombre(nombre);
+		ServidorBean servidor = sqlHelper.obtenerServidorPorNombre(nombre);
 		
-//		Toast.makeText(parent, result.get("nombre").toString(), Toast.LENGTH_SHORT).show();
+		parent.txtHost.setText(servidor.getHost());
 		
-		parent.txtHost.setText(result.get("host").toString());
-		HashMap<String, String> campos = (HashMap<String, String>) result.get("campos");
-//		result.get("campos");
-		if (campos != null && campos.size() > 0 && campos.get(0) != null) {
-			addCampos(parent.tableCampos, campos, true);
+		parent.activeServer.setHost(servidor.getHost());
+		parent.activeServer.setNombre(servidor.getNombre());
+		
+		if (servidor.getCampos() != null && servidor.getCampos().size() > 0) {
+			addCampos(parent.tableCampos, servidor.getCampos(), true);
 			swichTableFieldsState(true);
 		}
 		
@@ -286,17 +287,23 @@ public class MyOnClickHandler implements OnClickListener {
 		MySQLiteHelper sqlHelper = new MySQLiteHelper(parent);
 		
 		String host = parent.txtHost.getText().toString();
-		LinkedHashMap<String, String> campos = new LinkedHashMap<String, String>();
 		
+		parent.activeServer.setHost(host);
+		parent.activeServer.setNombre(nombre);
+		
+		ArrayList<CampoBean> campos = new ArrayList<CampoBean>();
 		TableLayout tableCampos = (TableLayout) parent.findViewById(R.id.tableCampos);
 		if (tableCampos.getChildCount() > 0) {
 			for (int i=0; i<tableCampos.getChildCount(); i++) {
+				CampoBean campo = new CampoBean();
 				TableRow row = (TableRow) tableCampos.getChildAt(i);
-				String campo = ((EditText) row.getChildAt(0)).getText().toString();
-				String valor = ((EditText) row.getChildAt(1)).getText().toString();
-				if (campo != null && !campo.isEmpty()) {
-					if (valor.isEmpty()) valor = null;
-					campos.put(campo, valor);
+				String campoStr = ((EditText) row.getChildAt(0)).getText().toString();
+				String valorStr = ((EditText) row.getChildAt(1)).getText().toString();
+				if (campoStr != null && !campoStr.isEmpty()) {
+					if (valorStr.isEmpty()) valorStr = null;
+					campo.setCampo(campoStr);
+					campo.setValor(valorStr);
+					campos.add(campo);
 				}
 			}
 		}
@@ -308,5 +315,5 @@ public class MyOnClickHandler implements OnClickListener {
 			
 		switchMenuItems(Constants.TAG_EDITANDO);
 	}
-
+	
 }

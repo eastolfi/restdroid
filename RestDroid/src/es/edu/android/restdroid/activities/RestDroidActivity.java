@@ -1,11 +1,16 @@
 package es.edu.android.restdroid.activities;
 
+import java.util.ArrayList;
+
+import android.app.AlertDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -17,10 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
+import android.widget.Toast;
 
 import com.google.ads.AdRequest;
 import com.google.ads.AdView;
 
+import es.edu.android.beans.CampoBean;
+import es.edu.android.beans.ServidorBean;
 import es.edu.android.restdroid.R;
 import es.edu.android.restdroid.handlers.MyAdMobListener;
 import es.edu.android.restdroid.handlers.MyOnClickHandler;
@@ -42,18 +50,31 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 	MyOnClickHandler myClickHandler;
 	public LinearLayout mainLayout;
 	public Menu menu; 
+	public ServidorBean activeServer;
+	SharedPreferences mPrefs;
+	final String SPLASHPREF = "SplashScrennNeededPreference";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
 		setContentView(R.layout.activity_main_screen);
 		
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+	    // second argument is the default to use if the preference can't be found
+	    Boolean needSplashScreen = mPrefs.getBoolean(SPLASHPREF, true);
+
+	    if (needSplashScreen) {
+	    	Intent i = new Intent(this, SplashScreen.class);
+	    	startActivity(i);
+	    }
+		
 		myClickHandler = new MyOnClickHandler(this);
+		activeServer = new ServidorBean();
+		activeServer.setCampos(new ArrayList<CampoBean>());
 		
 		/*********ADMOB***********/
 		adView = (AdView) findViewById(R.id.adMob);
-//		adView.setVisibility(View.GONE);
 		adView.setAdListener(new MyAdMobListener());
 		AdRequest req = new AdRequest();
 		req.addTestDevice(AdRequest.TEST_EMULATOR);
@@ -133,28 +154,27 @@ public class RestDroidActivity extends FragmentActivity implements OnItemSelecte
 		MyDialogHelper dialog;
 		switch (item.getItemId()) {
 		case R.id.menu_save_server:
-//			MyOnClickHandler onclick2 = new MyOnClickHandler(this);
 			dialog = new MyDialogHelper(this, Constants.DIALOG_GUARDAR_SERVIDOR);
 			dialog.show(this.getSupportFragmentManager(), "");
-//			myClickHandler.guardarServidor();
 			break;
-		case R.id.menu_modif_server:
+		case R.id.menu_modif_server_save:
+			dialog = new MyDialogHelper(this, Constants.DIALOG_EDITAR_SERVIDOR);
+			dialog.show(this.getSupportFragmentManager(), "");
+			break;
+		case R.id.menu_modif_server_delete:
+			dialog = new MyDialogHelper(this, Constants.DIALOG_BORRAR_SERVIDOR);
+			dialog.show(this.getSupportFragmentManager(), "");
 			break;
 		case R.id.menu_load_server:
-//			MyOnClickHandler onclick = new MyOnClickHandler(this);
-//			myClickHandler.cargarServidor();
 			dialog = new MyDialogHelper(this, Constants.DIALOG_CARGAR_SERVIDOR);
 			dialog.show(this.getSupportFragmentManager(), "");
 			break;
 		case R.id.menu_clear_server:
-//			MyOnClickHandler onclick3 = new MyOnClickHandler(this);
-//			myClickHandler.cleanFields((TableLayout) findViewById(R.id.tableCampos));
 			dialog = new MyDialogHelper(this, Constants.DIALOG_LIMPIAR_CAMPOS);
 			dialog.show(this.getSupportFragmentManager(), "");
-//			mainLayout.setTag(Constants.TAG_NUEVO);
 			break;
 		case R.id.menu_settings:
-			
+			Toast.makeText(this, "Ajustes", Toast.LENGTH_SHORT).show();
 			break;
 		}
 		return super.onMenuItemSelected(featureId, item);

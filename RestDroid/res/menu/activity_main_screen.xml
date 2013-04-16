@@ -8,7 +8,7 @@
     </item>
     <item
         android:id="@+id/menu_modif_server"
-        android:icon="@drawable/ic_menu_overflow"
+        android:icon="@android:drawable/ic_menu_edit"
         android:showAsAction="ifRoom"
         android:title="Modificar"
         android:visible="false">
@@ -17,10 +17,6 @@
                 android:id="@+id/menu_modif_server_save"
                 android:icon="@drawable/ic_menu_save2"
                 android:title="Guardar"/>
-            <item
-                android:id="@+id/menu_modif_server_edit"
-                android:icon="@android:drawable/ic_menu_edit"
-                android:title="Editar"/>
             <item
                 android:id="@+id/menu_modif_server_delete"
                 android:icon="@android:drawable/ic_delete"
